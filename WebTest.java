@@ -1,4 +1,6 @@
 import java.util.logging.*;
+import java.util.List;
+import java.util.Arrays;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,5 +32,20 @@ public class WebTest {
         WebElement usedMessage = driver.findElement(By.cssSelector("div.row > p.lead"));
         assertTrue((calculationMessage.getText().replace("\n", " ")).contains("Welcome, friend, to a land of pure calculation."));
         assertTrue((usedMessage.getText().replace("\n", " ")).contains("Used for CS1632 Software Quality Assurance, taught by Bill Laboon"));
+    }
+
+    // Given that when I am on any page,
+    // When I look at the navigation bar,
+    // Then I see 5 distinct links
+    @Test
+    public void testLinksDisplayed() {
+        List<String> expectedLinks = Arrays.asList("", "fact", "fib", "hello", "cathy");
+        List<WebElement> linkTags = driver.findElements(By.tagName("a"));
+
+        for(WebElement link : linkTags) {
+            if (!expectedLinks.contains(link.getAttribute("href").replace(TEST_SITE, ""))) {
+                fail("One or more links missing");
+            }
+        }
     }
 }
