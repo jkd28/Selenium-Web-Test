@@ -171,7 +171,6 @@ public class WebTest {
     // This test verifies that if invalid input (a string value) is entered into
     // the Factorial calculation, that a message displays saying that the value is
     // 1 (as per Requirement 5).
-
     @Test
     public void testFactorialStringInput(){
         driver.get(TEST_SITE + "fact");
@@ -183,6 +182,44 @@ public class WebTest {
         try {
             WebElement result = driver.findElement(By.cssSelector("h2"));
             assertEquals("Factorial of 5 is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
+        }
+    }
+
+    // This test verifies that the Factorial page correctly displays
+    // the result of 1 for the small boundary input value of 0.  Since 0
+    // is not in the acceptable range, the output should give 1 as the result.
+    @Test
+    public void testFactorialSmallNumInput(){
+        driver.get(TEST_SITE + "fact");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("0");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Factorial of 0 is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
+        }
+    }
+
+    // This test verifies that the Factorial page correctly displays
+    // the result of 1 for the large boundary input value of 101.  Since 101
+    // is not in the acceptable range, the output should give 1 as the result.
+    @Test
+    public void testFactorialLargeNumInput(){
+        driver.get(TEST_SITE + "fact");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("101");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Factorial of 101 is 1!", result.getText());
         } catch(NoSuchElementException except) {
             fail("No message printed to screen");
         }
@@ -220,5 +257,52 @@ public class WebTest {
         } catch(NoSuchElementException except) {
             fail("No message printed to screen");
         }
+    }
+
+    // This test verifies that the Fibonacci page correctly displays
+    // the result of 1 for the small boundary input value of 0.  Since 0
+    // is not in the acceptable range, the output should give 1 as the result.
+    @Test
+    public void testFibonacciSmallNumInput(){
+        driver.get(TEST_SITE + "fact");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("0");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Factorial of 0 is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
+        }
+    }
+
+    // This test verifies that the Fibonacci page correctly displays
+    // the result of 1 for the large boundary input value of 101.  Since 101
+    // is not in the acceptable range, the output should give 1 as the result.
+    @Test
+    public void testFibonacciLargeNumInput(){
+        driver.get(TEST_SITE + "fact");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("101");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Factorial of 101 is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
+        }
+    }
+
+    // This test verifies that the default display message on the Hello
+    // page matches the definition laid out in the requirements documentation 
+    @Test
+    public void testHelloDefault() {
+        driver.get(TEST_SITE + "hello");
+        WebElement display = driver.findElement(By.cssSelector("h2"));
+        assertEquals("Hello CS1632, from Prof. Laboon!", display.getText());
     }
 }
