@@ -34,18 +34,191 @@ public class WebTest {
         assertTrue((usedMessage.getText().replace("\n", " ")).contains("Used for CS1632 Software Quality Assurance, taught by Bill Laboon"));
     }
 
-    // Given that when I am on any page,
+    // Given that when I am on the home page,
     // When I look at the navigation bar,
     // Then I see 5 distinct links
     @Test
-    public void testLinksDisplayed() {
-        List<String> expectedLinks = Arrays.asList("", "fact", "fib", "hello", "cathy");
-        List<WebElement> linkTags = driver.findElements(By.tagName("a"));
+    public void testLinksDisplayedFromHome() {
+        // Check for each link, failure if an error is thrown
+        WebElement homeLink = driver.findElement(By.linkText("CS1632 D3 Home"));
+        assertEquals(TEST_SITE, homeLink.getAttribute("href"));
 
-        for(WebElement link : linkTags) {
-            if (!expectedLinks.contains(link.getAttribute("href").replace(TEST_SITE, ""))) {
-                fail("One or more links missing");
-            }
+        WebElement factLink = driver.findElement(By.linkText("Factorial"));
+        assertEquals(TEST_SITE + "fact", factLink.getAttribute("href"));
+
+        WebElement fiboLink = driver.findElement(By.linkText("Fibonacci"));
+        assertEquals(TEST_SITE + "fib", fiboLink.getAttribute("href"));
+
+        WebElement hellLink = driver.findElement(By.linkText("Hello"));
+        assertEquals(TEST_SITE + "hello", hellLink.getAttribute("href"));
+
+        WebElement cathLink = driver.findElement(By.linkText("Cathedral Pics"));
+        assertEquals(TEST_SITE + "cathy", cathLink.getAttribute("href"));
+    }
+
+    // Given that when I am on the factorial page,
+    // When I look at the navigation bar,
+    // Then I see 5 distinct links
+    @Test
+    public void testLinksDisplayedFromHFact() {
+        driver.get(TEST_SITE + "fact");
+
+        // Check for each link, failure if an error is thrown
+        WebElement homeLink = driver.findElement(By.linkText("CS1632 D3 Home"));
+        assertEquals(TEST_SITE, homeLink.getAttribute("href"));
+
+        WebElement factLink = driver.findElement(By.linkText("Factorial"));
+        assertEquals(TEST_SITE + "fact", factLink.getAttribute("href"));
+
+        WebElement fiboLink = driver.findElement(By.linkText("Fibonacci"));
+        assertEquals(TEST_SITE + "fib", fiboLink.getAttribute("href"));
+
+        WebElement hellLink = driver.findElement(By.linkText("Hello"));
+        assertEquals(TEST_SITE + "hello", hellLink.getAttribute("href"));
+
+        WebElement cathLink = driver.findElement(By.linkText("Cathedral Pics"));
+        assertEquals(TEST_SITE + "cathy", cathLink.getAttribute("href"));
+    }
+
+    // Given that when I am on the Fibonacci page,
+    // When I look at the navigation bar,
+    // Then I see 5 distinct links
+    @Test
+    public void testLinksDisplayedFromFib() {
+        driver.get(TEST_SITE + "fib");
+
+        // Check for each link, failure if an error is thrown
+        WebElement homeLink = driver.findElement(By.linkText("CS1632 D3 Home"));
+        assertEquals(TEST_SITE, homeLink.getAttribute("href"));
+
+        WebElement factLink = driver.findElement(By.linkText("Factorial"));
+        assertEquals(TEST_SITE + "fact", factLink.getAttribute("href"));
+
+        WebElement fiboLink = driver.findElement(By.linkText("Fibonacci"));
+        assertEquals(TEST_SITE + "fib", fiboLink.getAttribute("href"));
+
+        WebElement hellLink = driver.findElement(By.linkText("Hello"));
+        assertEquals(TEST_SITE + "hello", hellLink.getAttribute("href"));
+
+        WebElement cathLink = driver.findElement(By.linkText("Cathedral Pics"));
+        assertEquals(TEST_SITE + "cathy", cathLink.getAttribute("href"));
+    }
+
+    // Each page should have 5 links that display at the top of the screen.
+    // This test confirms those links are present from the /hello page of the site
+    // by checking for each link, then checking the target of the links.
+    @Test
+    public void testLinksDisplayedFromHello() {
+        driver.get(TEST_SITE + "hello");
+
+        // Check for each link, failure if an error is thrown
+        WebElement homeLink = driver.findElement(By.linkText("CS1632 D3 Home"));
+        assertEquals(TEST_SITE, homeLink.getAttribute("href"));
+
+        WebElement factLink = driver.findElement(By.linkText("Factorial"));
+        assertEquals(TEST_SITE + "fact", factLink.getAttribute("href"));
+
+        WebElement fiboLink = driver.findElement(By.linkText("Fibonacci"));
+        assertEquals(TEST_SITE + "fib", fiboLink.getAttribute("href"));
+
+        WebElement hellLink = driver.findElement(By.linkText("Hello"));
+        assertEquals(TEST_SITE + "hello", hellLink.getAttribute("href"));
+
+        WebElement cathLink = driver.findElement(By.linkText("Cathedral Pics"));
+        assertEquals(TEST_SITE + "cathy", cathLink.getAttribute("href"));
+    }
+
+
+    // Each page should have 5 links that display at the top of the screen.
+    // This test confirms those links are present from the /cathy page of the site
+    // by checking for each link, then checking the target of the links.
+    @Test
+    public void testLinksDisplayedFromCathy() {
+        driver.get(TEST_SITE + "cathy");
+
+        // Check for each link, failure if an error is thrown
+        WebElement homeLink = driver.findElement(By.linkText("CS1632 D3 Home"));
+        assertEquals(TEST_SITE, homeLink.getAttribute("href"));
+
+        WebElement factLink = driver.findElement(By.linkText("Factorial"));
+        assertEquals(TEST_SITE + "fact", factLink.getAttribute("href"));
+
+        WebElement fiboLink = driver.findElement(By.linkText("Fibonacci"));
+        assertEquals(TEST_SITE + "fib", fiboLink.getAttribute("href"));
+
+        WebElement hellLink = driver.findElement(By.linkText("Hello"));
+        assertEquals(TEST_SITE + "hello", hellLink.getAttribute("href"));
+
+        WebElement cathLink = driver.findElement(By.linkText("Cathedral Pics"));
+        assertEquals(TEST_SITE + "cathy", cathLink.getAttribute("href"));
+    }
+
+    // This test verifies the calculation of a valid Factorial input.
+    // It does so by finding the input field, entering the value 5, and
+    // verifying that the correct text is displayed with a result of 120
+    @Test
+    public void testFactorialCalculation() {
+        driver.get(TEST_SITE + "fact");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("5");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        WebElement result = driver.findElement(By.cssSelector("h2"));
+        assertEquals("Factorial of 5 is 120!", result.getText());
+    }
+
+    // This test verifies that if invalid input (a string value) is entered into
+    // the Factorial calculation, that a message displays saying that the value is
+    // 1 (as per Requirement 5).
+
+    @Test
+    public void testFactorialStringInput(){
+        driver.get(TEST_SITE + "fact");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("this should not be allowed");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Factorial of 5 is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
+        }
+    }
+
+    // This test verifies the calculation of a valid Fibonacci input.
+    // It does so by finding the input field, entering the value 5, and
+    // verifying that the correct text is displayed with a result of 8
+    @Test
+    public void testFibonacciCalculation(){
+        driver.get(TEST_SITE + "fib");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("5");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        WebElement result = driver.findElement(By.cssSelector("h2"));
+        assertEquals("Fibonacci of 5 is 8!", result.getText());
+    }
+
+    // This test verifies that if invalid input (a string value) is entered into
+    // the Fibonacci calculation, that a message displays saying that the value is
+    // 1 (as per Requirement 5).
+    @Test
+    public void testFibonacciStringInput(){
+        driver.get(TEST_SITE + "fact");
+
+        WebElement textBox = driver.findElement(By.name("value"));
+        textBox.sendKeys("this should not be allowed");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Factorial of 5 is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
         }
     }
 }
