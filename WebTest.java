@@ -298,11 +298,67 @@ public class WebTest {
     }
 
     // This test verifies that the default display message on the Hello
-    // page matches the definition laid out in the requirements documentation 
+    // page matches the definition laid out in the requirements documentation
     @Test
     public void testHelloDefault() {
-        driver.get(TEST_SITE + "hello");
-        WebElement display = driver.findElement(By.cssSelector("h2"));
-        assertEquals("Hello CS1632, from Prof. Laboon!", display.getText());
+        try {
+            driver.get(TEST_SITE + "hello");
+            WebElement display = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Hello CS1632, from Prof. Laboon!", display.getText());
+        } catch (NoSuchElementException except) {
+            fail("Text failed to display properly");
+        }
+    }
+
+    // This test verifies that the output from the Hello page with a
+    // string value following the url will display a message consistent
+    // with that defined in the requirements
+    @Test
+    public void testHelloStringInput() {
+        try {
+            driver.get(TEST_SITE + "hello/SomeTestValue");
+            WebElement display = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Hello CS1632, from SomeTestValue!", display.getText());
+        } catch (NoSuchElementException except) {
+            fail("Text failed to display properly");
+        }
+    }
+
+    // This test verifies that the output from the Hello page with an
+    // int value following the url will display a message consistent
+    // with that defined in the requirements
+    @Test
+    public void testHelloIntInput() {
+        try {
+            driver.get(TEST_SITE + "hello/2313123");
+            WebElement display = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Hello CS1632, from 2313123!", display.getText());
+        } catch (NoSuchElementException except) {
+            fail("Text failed to display properly");
+        }
+    }
+
+    // This test verifies that the output from the Hello page with a
+    // string value containing slashes following the url will display a
+    // message consistent with that defined in the requirements
+    @Test
+    public void testHelloWithSlashes() {
+        try {
+            driver.get(TEST_SITE + "test/this/stuff");
+            WebElement display = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Hello CS1632, from test/this/stuff!", display.getText());
+        } catch (NoSuchElementException except) {
+            fail("Text failed to display properly");
+        }
+    }
+
+    @Test
+    public void testCathyImgList() {
+        driver.get(TEST_SITE + "cathy");
+        try {
+            WebElement list = driver.findElement(By.cssSelector("ol"));
+        } catch (NoSuchElementException ex) {
+            fail("Ordered List not present or elements are not images");
+        }
     }
 }
