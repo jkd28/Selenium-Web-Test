@@ -257,7 +257,7 @@ public class WebTest {
         assertEquals("Fibonacci of 5 is 8!", result.getText());
     }
 
-    // This test verifies that if no input is entered into the Factorial
+    // This test verifies that if no input is entered into the Fibonacci
     // calculation, that a message displays saying that the value is
     // 1 (as per Requirement 5).
     @Test
@@ -422,8 +422,9 @@ public class WebTest {
         }
     }
 
-    // This test ensures that clicking on the images does not affect the
-    // page we are on, and that the images do not act as links.
+    // This test ensures that clicking on the images  on the /cathy page
+    // does not affect the page we are on, and that the images do not
+    // act as links.
     @Test
     public void testClickCathyImages() {
         driver.get(TEST_SITE + "cathy");
