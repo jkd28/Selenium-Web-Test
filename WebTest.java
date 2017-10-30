@@ -30,6 +30,7 @@ public class WebTest {
     public void testHomepageTextDisplay(){
         WebElement calculationMessage = driver.findElement(By.cssSelector("p.lead"));
         WebElement usedMessage = driver.findElement(By.cssSelector("div.row > p.lead"));
+
         assertTrue((calculationMessage.getText().replace("\n", " ")).contains("Welcome, friend, to a land of pure calculation."));
         assertTrue((usedMessage.getText().replace("\n", " ")).contains("Used for CS1632 Software Quality Assurance, taught by Bill Laboon"));
     }
@@ -181,7 +182,23 @@ public class WebTest {
 
         try {
             WebElement result = driver.findElement(By.cssSelector("h2"));
-            assertEquals("Factorial of 5 is 1!", result.getText());
+            assertEquals("Factorial of this should not be allowed is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
+        }
+    }
+
+    // This test verifies that if no input is entered into the Factorial
+    // calculation, that a message displays saying that the value is
+    // 1 (as per Requirement 5).
+    @Test
+    public void testFactorialNoInput(){
+        driver.get(TEST_SITE + "fact");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Factorial of is 1!", result.getText());
         } catch(NoSuchElementException except) {
             fail("No message printed to screen");
         }
@@ -240,12 +257,28 @@ public class WebTest {
         assertEquals("Fibonacci of 5 is 8!", result.getText());
     }
 
+    // This test verifies that if no input is entered into the Factorial
+    // calculation, that a message displays saying that the value is
+    // 1 (as per Requirement 5).
+    @Test
+    public void testFibonacciNoInput(){
+        driver.get(TEST_SITE + "fib");
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
+
+        try {
+            WebElement result = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Fibonacci of is 1!", result.getText());
+        } catch(NoSuchElementException except) {
+            fail("No message printed to screen");
+        }
+    }
+
     // This test verifies that if invalid input (a string value) is entered into
     // the Fibonacci calculation, that a message displays saying that the value is
     // 1 (as per Requirement 5).
     @Test
     public void testFibonacciStringInput(){
-        driver.get(TEST_SITE + "fact");
+        driver.get(TEST_SITE + "fib");
 
         WebElement textBox = driver.findElement(By.name("value"));
         textBox.sendKeys("this should not be allowed");
@@ -253,7 +286,7 @@ public class WebTest {
 
         try {
             WebElement result = driver.findElement(By.cssSelector("h2"));
-            assertEquals("Factorial of 5 is 1!", result.getText());
+            assertEquals("Fibonacci of this should not be allowed is 1!", result.getText());
         } catch(NoSuchElementException except) {
             fail("No message printed to screen");
         }
@@ -264,7 +297,7 @@ public class WebTest {
     // is not in the acceptable range, the output should give 1 as the result.
     @Test
     public void testFibonacciSmallNumInput(){
-        driver.get(TEST_SITE + "fact");
+        driver.get(TEST_SITE + "fib");
 
         WebElement textBox = driver.findElement(By.name("value"));
         textBox.sendKeys("0");
@@ -272,7 +305,7 @@ public class WebTest {
 
         try {
             WebElement result = driver.findElement(By.cssSelector("h2"));
-            assertEquals("Factorial of 0 is 1!", result.getText());
+            assertEquals("Fibonacci of 0 is 1!", result.getText());
         } catch(NoSuchElementException except) {
             fail("No message printed to screen");
         }
@@ -283,7 +316,7 @@ public class WebTest {
     // is not in the acceptable range, the output should give 1 as the result.
     @Test
     public void testFibonacciLargeNumInput(){
-        driver.get(TEST_SITE + "fact");
+        driver.get(TEST_SITE + "fib");
 
         WebElement textBox = driver.findElement(By.name("value"));
         textBox.sendKeys("101");
@@ -291,7 +324,7 @@ public class WebTest {
 
         try {
             WebElement result = driver.findElement(By.cssSelector("h2"));
-            assertEquals("Factorial of 101 is 1!", result.getText());
+            assertEquals("Fibonacci of 101 is 1!", result.getText());
         } catch(NoSuchElementException except) {
             fail("No message printed to screen");
         }
@@ -352,11 +385,60 @@ public class WebTest {
         }
     }
 
+    // This test verifies that the Hello page with text following in the url
+    // containing special characters, including spaces, will properly display
+    // the string as defined by the requirements.
+    @Test
+    public void testHelloWithSpecialChars(){
+        try {
+            String testString = "@test& some speci@ls";
+            driver.get(TEST_SITE + "hello/" + testString);
+            WebElement display = driver.findElement(By.cssSelector("h2"));
+            assertEquals("Hello CS1632, from " + testString + "!", display.getText());
+        } catch (NoSuchElementException ex) {
+            fail("Text failed to display as expected");
+        }
+    }
+
+    // This test ensures there are exactly 3 images within an ordered list
+    // on the Cathy page of the site.  It also verifies that each of the 3 images
+    // is being displayed.
     @Test
     public void testCathyImgList() {
         driver.get(TEST_SITE + "cathy");
         try {
+            // ensure there is an ordered list
             WebElement list = driver.findElement(By.cssSelector("ol"));
+
+            // Get each element in the ordered list
+            List<WebElement> images = driver.findElements(By.cssSelector("ol > li > img"));
+            assertEquals(3, images.size());
+
+            for(WebElement img : images) {
+                assertTrue(img.isDisplayed());
+            }
+        } catch (NoSuchElementException ex) {
+            fail("Ordered List not present or elements are not images");
+        }
+    }
+
+    // This test ensures that clicking on the images does not affect the
+    // page we are on, and that the images do not act as links.
+    @Test
+    public void testClickCathyImages() {
+        driver.get(TEST_SITE + "cathy");
+        try {
+            // ensure there is an ordered list
+            WebElement list = driver.findElement(By.cssSelector("ol"));
+
+            // Get each element in the ordered list
+            List<WebElement> images = driver.findElements(By.cssSelector("ol > li > img"));
+            assertEquals(3, images.size());
+
+            for(WebElement img : images) {
+                img.click();
+                assertEquals(TEST_SITE + "cathy", driver.getCurrentUrl());
+            }
         } catch (NoSuchElementException ex) {
             fail("Ordered List not present or elements are not images");
         }
